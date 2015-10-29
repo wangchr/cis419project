@@ -13,7 +13,7 @@ class FlavorNetwork:
         filepath = 'flavor_network_data/srep00196-s2.csv'
         file = open(filepath, 'r')
         data = np.genfromtxt(filepath, dtype = None, delimiter=',', skip_header=4)
-self.
+
         # Assign each unique ingredient an index
         index = 0
         self.ingred_dict = {}
