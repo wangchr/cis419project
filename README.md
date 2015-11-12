@@ -1,17 +1,19 @@
-eMeriL
+# eMeriL
 CIS 419: Introduction to Machine Learning
 Final Project
 
 Philip Del Vecchio, Golam Kibria, Christian Wang
 
+## Setup
+- In a virtual environment, run `pip install -r requirements.txt`
 
-TODO:
+## TODO
 Phil - Scraping recipes and nutritional value.
 Christian - Organizing flavor networks
 Golam - Set up ML algorithms using sklearn
 
 
-TIMELINE:
+## TIMELINE:
 Nov 13 - Meeting, Team Updates
 Begin drafting project update report
 
