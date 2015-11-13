@@ -2,28 +2,6 @@ import pymongo
 
 MONGODB_URI = 'mongodb://emeril:lagasse@ds053964.mongolab.com:53964/pantry'
 
-SEED_DATA = [
-    {
-        'name': 'Quesadilla',
-        'ingredients': [
-            'tortilla',
-            'cheese'
-        ]
-    },
-    {
-        'name': 'Grilled Cheese',
-        'ingredients': [
-            'bread',
-            'cheese'
-        ]
-    },
-]
-
-def seed_db():
-    adapter = DatabaseAdapter()
-    adapter.add_recipe('Grilled Cheese', ['bread', 'cheese'])
-    adapter.add_recipe('Quesadilla', ['tortilla', 'cheese'])
-
 class DatabaseAdapter():
 
     def __init__(self):
@@ -32,6 +10,9 @@ class DatabaseAdapter():
 
     def add_recipe(self, name, ingredients):
         self.db['recipes'].insert({'name': name, 'ingredient': ingredients})
+
+    def __del__(self):
+        self.client.close()
 
 if __name__ == '__main__':
     seed_db()
