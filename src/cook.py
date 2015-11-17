@@ -26,9 +26,14 @@ plot_size = 4
 # Load the recipe data
 real_recipes = db.all_recipes_pairs()
 fake_recipes = list(db.random_recipes(len(real_recipes)))
-tfidf_vectorizer = TfidfVectorizer()
+tfidf_vectorizer = TfidfVectorizer(tokenizer=lambda x: x.split(','))
 X = tfidf_vectorizer.fit_transform(real_recipes + fake_recipes)
 Y = [1] * len(real_recipes) + [0] * len(fake_recipes)
+
+freqs = [(word, X.getcol(idx).sum()) for word, idx in tfidf_vectorizer.vocabulary_.items()[:30]]
+print freqs
+#sort from largest to smallest
+#print sorted (freqs, key = lambda x: -x[1])
 
 # Generate a random training/testing split
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=.4)

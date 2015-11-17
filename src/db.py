@@ -7,7 +7,7 @@ MONGODB_URI = 'mongodb://emeril:lagasse@ds053964.mongolab.com:53964/pantry'
 AVERAGE_INGREDIENT_COUNT = 10
 
 def pairs_string(ingredients):
-    return ' '.join([a.replace(' ', '_') + '##' + b.replace(' ', '_') for a, b in permutations(ingredients, 2)])
+    return ','.join([a.replace(' ', '_') + '+' + b.replace(' ', '_') for a, b in permutations(ingredients, 2)])
 
 def random_recipes(count):
     ingredients = all_ingredients()
