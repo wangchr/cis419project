@@ -1,0 +1,10 @@
+Testing order:
+mean: 0.54382, std: 0.01651, params: {'n_estimators': 5}
+mean: 0.58652, std: 0.02953, params: {'n_estimators': 10}
+mean: 0.58202, std: 0.02777, params: {'n_estimators': 15}
+
+========================================================
+Mean score order:
+mean: 0.54382, std: 0.01651, params: {'n_estimators': 5}
+mean: 0.58202, std: 0.02777, params: {'n_estimators': 15}
+mean: 0.58652, std: 0.02953, params: {'n_estimators': 10}

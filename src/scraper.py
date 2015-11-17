@@ -20,7 +20,7 @@ def urls_from_page(page):
 
 def get_recipes():
     database = db.DatabaseAdapter()
-    for page in range(22, 233):
+    for page in range(140, 233):
         print page
         for url in urls_from_page(page):
             name, ingredients = scrape_recipe(url)

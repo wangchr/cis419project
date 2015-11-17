@@ -1,0 +1,3 @@
+AdaBoost                : mean: 0.58652, std: 0.02953, params: {'n_estimators': 10}
+Random Forests          : mean: 0.57378, std: 0.03559, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 3}
+SVM RBF                 : mean: 0.50337, std: 0.00000, params: {'C': 2}

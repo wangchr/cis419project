@@ -6,25 +6,34 @@ from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
 
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.colors import ListedColormap
+#import matplotlib.pyplot as plt
+#from matplotlib.colors import ListedColormap
 from sklearn.preprocessing import StandardScaler
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.cross_validation import train_test_split
 
 
 import pdb
 import sys
 
-plot = True
+import db
+
+plot = False
 plot_size = 4
 
 # LOAD DATA-----------------------------------------------------------------
 
-# Load the training data from file
-data_file = 'recipe_data/svmTuningData.dat'
-data = np.loadtxt(data_file, delimiter=',')
-X = data[:, 0:-1]
-Y = data[:, -1]
+# Load the recipe data
+real_recipes = db.all_recipes_pairs()
+fake_recipes = list(db.random_recipes(len(real_recipes)))
+tfidf_vectorizer = TfidfVectorizer(tokenizer=lambda x: x.split(','))
+X = tfidf_vectorizer.fit_transform(real_recipes + fake_recipes)
+Y = [1] * len(real_recipes) + [0] * len(fake_recipes)
+
+freqs = [(word, X.getcol(idx).sum()) for word, idx in tfidf_vectorizer.vocabulary_.items()[:30]]
+print freqs
+#sort from largest to smallest
+#print sorted (freqs, key = lambda x: -x[1])
 
 # Generate a random training/testing split
 Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=.4)
