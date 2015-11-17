@@ -1,0 +1,12 @@
+Testing order:
+mean: 0.50337, std: 0.00000, params: {'C': 2}
+mean: 0.50337, std: 0.00000, params: {'C': 4}
+mean: 0.50337, std: 0.00000, params: {'C': 8}
+mean: 0.50337, std: 0.00000, params: {'C': 16}
+
+========================================================
+Mean score order:
+mean: 0.50337, std: 0.00000, params: {'C': 2}
+mean: 0.50337, std: 0.00000, params: {'C': 4}
+mean: 0.50337, std: 0.00000, params: {'C': 8}
+mean: 0.50337, std: 0.00000, params: {'C': 16}

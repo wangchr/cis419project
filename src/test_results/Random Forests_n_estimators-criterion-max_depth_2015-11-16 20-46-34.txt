@@ -1,0 +1,52 @@
+Testing order:
+mean: 0.64457, std: 0.02228, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.74457, std: 0.03873, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.77603, std: 0.03685, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.72097, std: 0.05818, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.82659, std: 0.03397, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.82846, std: 0.01961, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.78539, std: 0.04543, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.81573, std: 0.02764, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.83745, std: 0.02280, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.75581, std: 0.00959, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 4}
+mean: 0.81236, std: 0.02107, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 4}
+mean: 0.86404, std: 0.04101, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 4}
+mean: 0.62996, std: 0.09144, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.64045, std: 0.03107, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.68652, std: 0.02377, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.72434, std: 0.05715, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.81498, std: 0.04119, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.84682, std: 0.02736, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.77715, std: 0.04415, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.82434, std: 0.03177, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.84607, std: 0.04809, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.80075, std: 0.04518, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 4}
+mean: 0.83221, std: 0.03230, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 4}
+mean: 0.86105, std: 0.00307, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 4}
+
+========================================================
+Mean score order:
+mean: 0.62996, std: 0.09144, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.64045, std: 0.03107, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.64457, std: 0.02228, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.68652, std: 0.02377, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 1}
+mean: 0.72097, std: 0.05818, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.72434, std: 0.05715, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.74457, std: 0.03873, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.75581, std: 0.00959, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 4}
+mean: 0.77603, std: 0.03685, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 1}
+mean: 0.77715, std: 0.04415, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.78539, std: 0.04543, params: {'n_estimators': 5, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.80075, std: 0.04518, params: {'n_estimators': 5, 'criterion': 'entropy', 'max_depth': 4}
+mean: 0.81236, std: 0.02107, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 4}
+mean: 0.81498, std: 0.04119, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.81573, std: 0.02764, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.82434, std: 0.03177, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.82659, std: 0.03397, params: {'n_estimators': 10, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.82846, std: 0.01961, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 2}
+mean: 0.83221, std: 0.03230, params: {'n_estimators': 10, 'criterion': 'entropy', 'max_depth': 4}
+mean: 0.83745, std: 0.02280, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 3}
+mean: 0.84607, std: 0.04809, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 3}
+mean: 0.84682, std: 0.02736, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 2}
+mean: 0.86105, std: 0.00307, params: {'n_estimators': 15, 'criterion': 'entropy', 'max_depth': 4}
+mean: 0.86404, std: 0.04101, params: {'n_estimators': 15, 'criterion': 'gini', 'max_depth': 4}
