@@ -38,180 +38,69 @@
 
 % The \icmltitle you define below is probably too long as a header.
 % Therefore, a short form for the running title is supplied here:
-\icmltitlerunning{PUT YOUR LAST NAMES HERE}
+\icmltitlerunning{Del Vecchio, Kibria, Wang}
 
 \begin{document} 
 
 \twocolumn[
-\icmltitle{Project Report Template for CIS 419/519\\Introduction to Machine Learning}
+\icmltitle{eMeriL: A Recipe Rating Prediction System Based on Foodpairing}
 
 % It is OKAY to include author information, even for blind
 % submissions: the style file will automatically remove it for you
 % unless you've provided the [accepted] option to the icml2014
 % package.
-\icmlauthor{Your Name}{email@yourdomain.edu}
-\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
-\icmlauthor{Your CoAuthor's Name}{email@coauthordomain.edu}
+\icmlauthor{Philip Del Vecchio}{delphi@seas.upenn.edu}
+\icmlauthor{Golam Kibria}{gkibria@seas.upenn.edu}
+\icmlauthor{Christian Wang}{wangchr@seas.upenn.edu}
 
 % You may provide any keywords that you 
 % find helpful for describing your paper; these are used to populate 
 % the "keywords" metadata in the PDF but will not be shown in the document
-\icmlkeywords{boring formatting information, machine learning}
+\icmlkeywords{foodpairing recipe network}
 
 \vskip 0.3in
 ]
 
 \begin{abstract} 
-Use this template to write your final report for CIS 419/519.  It is based on the paper template used in the International Conference on Machine Learning, one of the main machine learning conferences.
+We propose a new recipe rating prediction system that exploits the foodpairing theory, which claims that ingredients taste better when paired with certain other ingredients. By using this approach, we examine the presence of ingredients as well as the pairwise combinations of ingredients. In addition, the system includes an ingredient flavor network, which relates ingredients based on the number of chemical flavor compounds they share. This network quantitatively characterizes the foodpairing theory and allows us to incorporate it as features.
 \end{abstract} 
 
+\section{Introduction}
+Chefs are always looking for new and exciting ways to combine and present ingredients in the dishes they serve. Traditionally, this process has either involved gathering empirical evidence in the kitchen or using historical data found in cookbooks and recorded recipes. However, these methods are inefficient because of the relative amount of time needed to parse through large amounts of recipe data and because creativity is constrained by convention and legacy. In this pursuit of new food combinations, many researchers have systematically examined the way ingredients are used together. Much work has been done on characterizing the chemical flavor and aromatic compounds that ingredients share and how we have naturally used this sensory information to pair foods \cite{leffingwell00,burdock09}. The examination of food at the molecular level has given rise to the foodpairing theory, which hypothesizes that certain foods taste better when matched with other foods because of shared flavor compounds. The foodpairing theory has been popularized by several high-rank restaurants as an approach to discovering unconventional food combinations such as caviar and chocolate \cite{blumenthal02}.
 
+We propose a new method for predicting the rating of a recipe based on an ingredient-flavor network, which describes the sharing of flavor compounds between ingredients, as well as existing recipes. A systematic and data-driven approach to the cooking creativity process could potentially allow chefs to quickly filter out poor flavor combinations and accelerate the rate at which innovative yet delicious dishes are conceived.
 
-\section{Final Submission}
+\section{Related Work}
+Understanding systematically how cooking works has been an application of interest in machine learning and data science \cite{harvey13,jagithyala14,liu14,yu13,teng12}. Researchers have derived features from a variety of sources.
 
-Your final submission will consist of two deliverables:  (1) a final report, and (2) a set of summary slides.  Remember that late days cannot be used for
-the final project submission.
+Because of the large number of users available in an online recipe-sharing community, user reviews have been a source of features that potentially provide useful insight into the quality of a recipe. Liu et al. leverages recipe reviews of users of online recipe database websites, framing the learning problem using a linguistic approach \yrcite{liu14}. 
 
-\subsection{Final Report}
+Personalized recipe recommendation systems have also been explored, particularly when based on nutritional value. These systems aim to encourage healthy living and eating by suggesting recipes match users' nutritional needs as well as ingredient combination preferences. \cite{harvey13} investigated incorporating nutritional content of ingredients along with preference for ingredients and ingredient combinations, concluding that including nutritional information was beneficial to their results, though insignificant due to a simple incorporation of those features. The idea of personalized recipe recommendations has also been expanded to group-based recipe recommendations by creating models that accurately recommend recipes to families of users \cite{berkovsky10}.
 
-Your final project report can be at most 5 pages long (include all text, appendices, figures, references, and anything else), and must be written in the provided \LaTeX\ template. 
+Methods of food preparation, such as frying or grilling, also intuitively alter the taste of foods and consequently the quality of recipes. Yu et al. proposed a simple linguistic approach to extract cooking methods and the complexity of the recipe as features used in recipe recommendation \yrcite{yu13}.
 
-At a minimum your final report must describe the problem/application and motivation, survey related work, discuss your approach, and describe your results/conclusions/impact of your project.  It should include enough detail such that someone else can reproduce your approach and results.  For inspiration on what should be included, see the project reports available on the links provided in Section~\ref{sect:Ideas}.  You will likely end up with a better report if you start by writing a 6-7 page report and then edit it down to 5 pages of well-written and concise prose.
+Network-based approaches to understand the relationships and combinations of ingredients have also been developed. Teng et al. examines reviews to determine substitutes for certain ingredients or modifications to the recipes. These were used to create complement and substitute ingredient networks from which features were extracted for recipe recommendation \yrcite{teng12}. Kinouchi et al. examined the ingredient usage in recipes recorded in a variety of cookbooks. By counting the frequency of ingredients, they created a network deriving the relationship between ingredients and recipes \yrcite{kinouchi08}.
 
-In addition, your report must also include a figure that graphically depicts a major component of your project (e.g., your approach and how it relates to the application, etc.).  Such a summary figure makes your paper much more accessible by providing a visual counterpart to the text.  Developing such a concise and clear figure can actually be quite time-consuming; I often go through around ten versions before I end up with a good final version.
+There has also been interest in the foodpairing approach to examine the ingredient usage methodology in cooking through understanding chemical composition of foods. The chemical compounds of foods have been recorded in sources such as \textit{Fenaroli's Handbook of Flavor Ingredients} \cite{burdock09} and the Volatile Compounds in Food Database \cite{leffingwell00}. Ahn et al. used the data recorded in \textit{Fenaroli's Handbook} to create a weighted “flavor network” representing the sharing of chemical flavor compounds between foods \yrcite{ahn11}. This flavor network was used to empirically evaluate of the foodpairing theory in different cultures. We plan to use this flavor network to generate features in our own experiments.
 
-After the class, we are also considering posting the final reports online so that you can read about each others� work. If are okay with having your final report posted online, be sure to give us explicit permission to post it in the README file, as described in the project description.
+\section{Method}
+\subsection{Data Preprocessing}
+We obtained our recipe data by scraping several popular recipe websites, including chowhound.com and allrecipes.com. Most recipe websites use a standardized schema to present their content, with particular labels on ingredients and quantities that eases scraping. With a python script using the Beautiful Soup library for HTML parsing and Pymongo for database interaction, we were able to scrape the names, ingredients, and categories for over 10,000 recipes and store them in a MongoDB. Ingredient quantities and preparation steps are notably absent, as they are beyond the scope of this study.
 
-\subsection{Summary Slides}
+After obtaining the recipes, we vectorized the ingredients with ingredient-pair counts. Frequently paired ingredients are indicative of good flavor combinations. We plan to later incorporate our research on flavor-pairs to weight the ingredient pairs in favor of established, studied pairs.
 
-In addition to the final report, you are also required to prepare a two-slide overview of your project.  Details on the summary slides are available in the project description.
+Though we initially planned to classify the data based on the ratings from users of the websites, we found that most of the ratings were in the 4-5 range, and did not provide enough disparity to provide a meaningful split. To combat this, we generated recipes with an average number of ingredients chosen uniformly at random from the set of known ingredients to use as negative examples, and treated the real recipes as positive examples. A recipe with ten random ingredients is almost certainly not going to be good, and so random recipes serve well as negative examples.
 
-\section{Optional Suggestions for Your Paper and Formatting Guidance} 
+\section{Experiments and Results}
+With a 60/40 train/test split on the shuffled data, we trained an SVC with an RBF kernel, a random forest classifier, and an AdaBoost classifier. Using grid search to determine the best parameters for each of these classifiers, we determined that the AdaBoost classifier, with a 80.3\% accuracy, was the best classifier.
 
-\subsection{Figures}
- 
-You may want to include figures in the paper to help readers visualize
-your approach and your results. Such artwork should be centered,
-legible, and separated from the text. Lines should be dark and at
-least 0.5~points thick for purposes of reproduction, and text should
-not appear on a gray background.
+\section{Future Work}
+We plan on gathering more data from other sources online. We also plan to do more in-depth preprocessing of the scraped text data to obtain better accuracy and feature representation. This will include cleaning of ingredient strings to ensure there are no unintended duplicates represented as different strings. We also will experiment with the inclusion of the ingredient flavor network as part of the feature set to see whether that gives better results. In addition, because we are currently using a binary classifer, we plan to find a way to extend the predictor to a multi-class or real-valued classifier so that the predictions are more meaningful.
 
-Label all distinct components of each figure. If the figure takes the
-form of a graph, then give a name for each axis and include a legend
-that briefly describes each curve. Do not include a title inside the
-figure; instead, be sure to include a caption describing your figure.
-
-You may float figures to the top or
-bottom of a column, and you may set wide figures across both columns
-(use the environment {\tt figure*} in \LaTeX), but always place
-two-column figures at the top or bottom of the page.
-
-\subsection{Algorithms}
-
-If you are using \LaTeX, please use the ``algorithm'' and ``algorithmic'' 
-environments to format pseudocode. These require 
-the corresponding stylefiles, algorithm.sty and 
-algorithmic.sty, which are supplied with this package. 
-Algorithm~\ref{alg:example} shows an example. 
-
-\begin{algorithm}[tb]
-   \caption{Bubble Sort}
-   \label{alg:example}
-\begin{algorithmic}
-   \STATE {\bfseries Input:} data $x_i$, size $m$
-   \REPEAT
-   \STATE Initialize $noChange = true$.
-   \FOR{$i=1$ {\bfseries to} $m-1$}
-   \IF{$x_i > x_{i+1}$} 
-   \STATE Swap $x_i$ and $x_{i+1}$
-   \STATE $noChange = false$
-   \ENDIF
-   \ENDFOR
-   \UNTIL{$noChange$ is $true$}
-\end{algorithmic}
-\end{algorithm}
- 
-\subsection{Tables} 
- 
-You may also want to include tables that summarize material. Like 
-figures, these should be centered, legible, and numbered consecutively. 
-However, place the title {\it above\/} the table, as in 
-Table~\ref{sample-table}.
-% Note use of \abovespace and \belowspace to get reasonable spacing 
-% above and below tabular lines. 
-
-\begin{table}[t]
-\caption{Classification accuracies for naive Bayes and flexible 
-Bayes on various data sets.}
-\label{sample-table}
-\vskip 0.15in
-\begin{center}
-\begin{small}
-\begin{sc}
-\begin{tabular}{lcccr}
-\hline
-\abovespace\belowspace
-Data set & Naive & Flexible & Better? \\
-\hline
-\abovespace
-Breast    & 95.9$\pm$ 0.2& 96.7$\pm$ 0.2& $\surd$ \\
-Cleveland & 83.3$\pm$ 0.6& 80.0$\pm$ 0.6& $\times$\\
-Glass2    & 61.9$\pm$ 1.4& 83.8$\pm$ 0.7& $\surd$ \\
-Credit    & 74.8$\pm$ 0.5& 78.3$\pm$ 0.6&         \\
-Horse     & 73.3$\pm$ 0.9& 69.7$\pm$ 1.0& $\times$\\
-Meta      & 67.1$\pm$ 0.6& 76.5$\pm$ 0.5& $\surd$ \\
-Pima      & 75.1$\pm$ 0.6& 73.9$\pm$ 0.5&         \\
-\belowspace
-Vehicle   & 44.9$\pm$ 0.6& 61.5$\pm$ 0.4& $\surd$ \\
-\hline
-\end{tabular}
-\end{sc}
-\end{small}
-\end{center}
-\vskip -0.1in
-\end{table}
-
-Tables contain textual material that can be typeset, as contrasted 
-with figures, which contain graphical material that must be drawn. 
-Specify the contents of each row and column in the table's topmost
-row. Again, you may float tables to a column's top or bottom, and set
-wide tables across both columns, but place two-column tables at the
-top or bottom of the page.
- 
-\subsection{Citations and References} 
-
-Please use APA reference format regardless of your formatter
-or word processor. If you rely on the \LaTeX\/ bibliographic 
-facility, use {\tt natbib.sty} and {\tt icml2014.bst} 
-included in the style-file package to obtain this format.
-
-Citations within the text should include the authors' last names and
-year. If the authors' names are included in the sentence, place only
-the year in parentheses, for example when referencing Arthur Samuel's
-pioneering work \yrcite{Samuel59}. Otherwise place the entire
-reference in parentheses with the authors and year separated by a
-comma \cite{Samuel59}. List multiple references separated by
-semicolons \cite{kearns89,Samuel59,mitchell80}. Use the `et~al.'
-construct only for citations with three or more authors or after
-listing all authors to a publication in an earlier reference \cite{MachineLearningI}.
-
-The references at the end of this document give examples for journal
-articles \cite{Samuel59}, conference publications \cite{langley00}, book chapters \cite{Newell81}, books \cite{DudaHart2nd}, edited volumes \cite{MachineLearningI}, 
-technical reports \cite{mitchell80}, and dissertations \cite{kearns89}. 
-
-Alphabetize references by the surnames of the first authors, with
-single author entries preceding multiple author entries. Order
-references for the same authors by year of publication, with the
-earliest first. Make sure that each reference includes all relevant
-information (e.g., page numbers).
-
- 
 \section*{Acknowledgments} 
- 
-If you did this work in collaboration with someone else, or if someone else (such as another
-professor) had advised you on this work, your report must fully acknowledge their contributions. If you received external help or assistance on this project, you must cite these sources here in the acknowledgements section.  If you do not have anything to list in this section, write simply ``None.''
+None.
 
-\bibliography{example_paper}
+\bibliography{report.bib}
 \bibliographystyle{icml2014}
 
 \end{document} 
