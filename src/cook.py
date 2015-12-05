@@ -1,164 +1,32 @@
-from multi_gridsearch import multi_grid_search
-
-# classifiers
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.svm import SVC
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-
-import numpy as np
-#import matplotlib.pyplot as plt
-#from matplotlib.colors import ListedColormap
-from sklearn.preprocessing import StandardScaler
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import HashingVectorizer, TfidfVectorizer
+from sklearn.ensemble import AdaBoostClassifier
 from sklearn.cross_validation import train_test_split
-
-
-import pdb
-import sys
 
 import db
 
-plot = False
-plot_size = 4
+N_ESTIMATORS = 15
 
-# LOAD DATA-----------------------------------------------------------------
-
-# Load the recipe data
-real_recipes = db.all_recipes_pairs()
-fake_recipes = list(db.random_recipes(len(real_recipes)))
-tfidf_vectorizer = TfidfVectorizer(tokenizer=lambda x: x.split(','))
-X = tfidf_vectorizer.fit_transform(real_recipes + fake_recipes)
-Y = [1] * len(real_recipes) + [0] * len(fake_recipes)
-
-freqs = [(word, X.getcol(idx).sum()) for word, idx in tfidf_vectorizer.vocabulary_.items()[:30]]
-print freqs
-#sort from largest to smallest
-#print sorted (freqs, key = lambda x: -x[1])
-
-# Generate a random training/testing split
-Xtrain, Xtest, Ytrain, Ytest = train_test_split(X, Y, test_size=.4)
-
-# DEFINE PARAMETERS----------------------------------------------------------
-
-# Decision Tree
-# depth_params = [x for x in range(1, 5)]
-# criterion_params = ['gini', 'entropy']
-# DTC_parameters =  {'max_depth': depth_params, 'criterion': criterion_params}
-
-# Decision Tree
-depth_params = [x for x in range(1, 5)]
-criterion_params = ['gini', 'entropy']
-features_params = [1, 2]
-DTC_parameters =  {'max_depth': depth_params, 'max_features': features_params}
-
-# Random Forests
-C_params = [2**x for x in range(1,5)]
-SVMRBF_parameters =  {'C': C_params}
-
-# Random Forests
-depth_params = [x for x in range(1, 5)]
-criterion_params = ['gini', 'entropy']
-estimator_params = [5 * x for x in range(1, 4)]
-RF_parameters =  {'max_depth': depth_params, 'criterion': criterion_params, 'n_estimators': estimator_params}
-
-# Adaboost
-estimator_params = [5 * x for x in range(1, 4)]
-AB_parameters =  {'n_estimators': estimator_params}
+def load_pairs():
+    return [line[:line.rfind(',')].replace(',', '+') for line in open('pairs.csv')][5:]
 
 
+def load_data():
+    real_recipes = db.all_recipes_pairs()
+    fake_recipes = list(db.random_recipes(len(real_recipes)))
+    tfidf_vectorizer = HashingVectorizer(tokenizer=lambda x: x.split(','))
+    x = tfidf_vectorizer.fit_transform(real_recipes + fake_recipes)
+    y = [1] * len(real_recipes) + [0] * len(fake_recipes)
 
-# DEFINE CLASSIFIERS----------------------------------------------------------
-
-classifiers = {
-	# 'Decision Tree': 		[DecisionTreeClassifier(), 	DTC_parameters, Xtrain, Ytrain],
-    'SVM RBF': 				[SVC(), SVMRBF_parameters, Xtrain, Ytrain],
-    'Random Forests': 		[RandomForestClassifier(), RF_parameters, Xtrain, Ytrain],
-    'AdaBoost': 			[AdaBoostClassifier(), AB_parameters, Xtrain, Ytrain]
-    }
-
-# RUN MULTI GRID SEARCH
-best_classifiers = multi_grid_search(classifiers)
+    return x, y
 
 
-# PLOT PERFORMANCE--------------------------------------------------------------------
-
-if not plot:
-	sys.exit()
-
-# define figure
-figure = plt.figure(figsize=((plot_size * 1.4 * len(classifiers), plot_size)))
-
-#mesh step size
-h = .02
-
-# Plot Dataset
-X = StandardScaler().fit_transform(Xtrain)
-Y = Ytrain
-
-x_min, x_max = X[:, 0].min() - .5, X[:, 0].max() + .5
-y_min, y_max = X[:, 1].min() - .5, X[:, 1].max() + .5
-xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                     np.arange(y_min, y_max, h))
-
-cm = plt.cm.RdBu
-cm_bright = ListedColormap(['#FF0000', '#0000FF'])
-ax = plt.subplot(1, len(classifiers) + 1, 1)
-
-# Plot data points
-ax.scatter(X[:, 0], X[:, 1], c=Y, cmap=cm_bright)
-ax.set_title('Data')
-ax.set_xlim(xx.min(), xx.max())
-ax.set_ylim(yy.min(), yy.max())
-ax.set_xticks(())
-ax.set_yticks(())
-
-i = 2
-
-# iterate over classifiers
-for classifier in best_classifiers:
-	# Scale the training data and the testing data
-    Xtrain = StandardScaler().fit_transform(classifiers[classifier[1]][2])
-    Ytrain = classifiers[classifier[1]][3]
-
-    Xtest = StandardScaler().fit_transform(Xtest)
-    Ytest = Ytest
-
-    ax = plt.subplot(1, len(best_classifiers) + 1, i)
-
-    model = classifier[0].fit(Xtrain, Ytrain)
-    score = model.score(Xtest, Ytest)
-
-    # Plot the decision boundary. For that, we will assign a color to each
-    # point in the mesh [x_min, m_max]x[y_min, y_max].
-    if hasattr(model, "decision_function"):
-        Z = model.decision_function(np.c_[xx.ravel(), yy.ravel()])
-    else:
-        Z = model.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:, 1]
-
-    # Put the result into a color plot
-    Z = Z.reshape(xx.shape)
-    ax.contourf(xx, yy, Z, cmap=cm, alpha=.8)
-
-    # Plot points
-    ax.scatter(X[:, 0], X[:, 1], c=Y, cmap=cm_bright, alpha=0.6)
-
-    ax.set_xlim(xx.min(), xx.max())
-    ax.set_ylim(yy.min(), yy.max())
-    ax.set_xticks(())
-    ax.set_yticks(())
-    ax.set_title(classifier[1])
-    ax.text(xx.max() - .3, yy.min() + .3, ('%s %.2f' % ('Score:', score)),
-            size=15, horizontalalignment='right')
-    # pdb.set_trace()
-    plt.xlabel(str(classifier[2]).replace(',', '\n'))
-
-    i += 1
-
-figure.subplots_adjust(left=.02, right=.98, bottom=0.25)
-plt.show()
+def cook():
+    x, y = load_data()
+    x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=.3)
+    classifier = AdaBoostClassifier(n_estimators=50)
+    classifier.fit(x_train, y_train)
+    print classifier.score(x_test, y_test)
 
 
-# Useful Links
-# http://scikit-learn.org/stable/modules/grid_search.html
-# http://scikit-learn.org/stable/modules/generated/sklearn.grid_search.GridSearchCV.html#sklearn.grid_search.GridSearchCV
-# http://scikit-learn.org/stable/auto_examples/model_selection/randomized_search.html#example-model-selection-randomized-search-py
+if __name__ == '__main__':
+    cook()
